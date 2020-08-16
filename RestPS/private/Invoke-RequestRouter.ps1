@@ -49,7 +49,7 @@ function Invoke-RequestRouter
         {
             # Execute Endpoint Script
             #Write-Log -LogFile $Logfile -LogLevel $logLevel -MsgType INFO -Message "Invoke-RequestRouter: Executing Endpoint Script."
-            $CommandReturn, $CommndReturnErrorCode = . $RequestCommand -RequestArgs $RequestArgs -Body $script:Body
+            $CommandReturn, $CommandReturnErrorCode = . $RequestCommand -RequestArgs $RequestArgs -Body $script:Body
         }
         else
         {
@@ -69,7 +69,7 @@ function Invoke-RequestRouter
         else
         {
 
-            switch ($CommndReturnErrorCode)
+            switch ($CommandReturnErrorCode)
             {
                 422 
                 {
