@@ -49,7 +49,7 @@ function Invoke-RequestRouter
         {
             # Execute Endpoint Script
             #Write-Log -LogFile $Logfile -LogLevel $logLevel -MsgType INFO -Message "Invoke-RequestRouter: Executing Endpoint Script."
-            $CommandReturn = . $RequestCommand -RequestArgs $RequestArgs -Body $script:Body
+            $CommandReturn, $CommndReturnErrorCode = . $RequestCommand -RequestArgs $RequestArgs -Body $script:Body
         }
         else
         {
@@ -68,11 +68,24 @@ function Invoke-RequestRouter
         }
         else
         {
-            # Valid response
-            #Write-Log -LogFile $Logfile -LogLevel $logLevel -MsgType INFO -Message "Invoke-RequestRouter: Valid Response (200)."
-            $script:result = $CommandReturn
-            $script:StatusDescription = "OK"
-            $script:StatusCode = 200
+
+            switch ($CommndReturnErrorCode)
+            {
+                422 
+                {
+                    $script:result = $CommandReturn
+                    $script:StatusDescription = "UNPROCESSABLE ENTITY"
+                    $script:StatusCode = 422
+                }
+                Default 
+                {
+                    # Valid response
+                    #Write-Log -LogFile $Logfile -LogLevel $logLevel -MsgType INFO -Message "Invoke-RequestRouter: Valid Response (200)."           
+                    $script:result = $CommandReturn
+                    $script:StatusDescription = "OK"
+                    $script:StatusCode = 200
+                }
+            }
         }
     }
     else
